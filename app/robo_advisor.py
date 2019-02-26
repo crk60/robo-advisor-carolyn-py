@@ -1,15 +1,28 @@
 #Followed Walkthrough for all core code
-
-from dotenv import load_dotenv
+#https://pypi.org/project/python-dotenv/
+from pathlib import Path  # python3 only
+env_path = Path('.') / '.env'
 import json
 import csv
 import os
 import requests
 
-symbol = input("Please specify a stock symbol: ")
-
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
-print("API KEY: " + api_key) # TODO: remove or comment-out this line after you have verified the environment variable is getting read properly
+
+while True:
+	symbol=input("Please type a valid stock symbol: ")
+	if not symbol.isalpha():
+		print("Please type a valid stock symbol: ")
+	else:
+		data=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&apikey='+api_key)
+
+		if 'Error' in data.text:
+			print("There has been an error. Please type a different stock symbol: ")
+		else:
+			break
+
+
+
 
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
 
@@ -39,18 +52,6 @@ recent_low = min(low_prices)
 # print(response.text)
 
 #heip's code was inspiration for the failing gracefully condition
-
-while True:
-	symbol=input("Please type a valid stock symbol: ")
-	if not symbol.isalpha():
-		print("Please type a valid stock symbol: ")
-	else:
-		data=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&apikey='+api_key)
-
-		if 'Error' in data.text:
-			print("There has been an error. Please type a different stock symbol: ")
-		else:
-			break
 
 
 
@@ -108,11 +109,16 @@ print("-------------------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}")
 print("-------------------------")
 
+#Completed with help from Ashish Patel
 print("-----------------")
-if float(result.iloc[0]['close'])> result['close'][0:15].astype(float).mean():
-	print ('We should buy this stock because its current closing price is higher than the closing average price over the last 15 days')
+threshold = 1.1*float(recent_low)
+if float(latest_close) < threshold:
+    print("RECOMMENDATION: BUY!")
+    print("RECOMMENDATION REASON: The latest closing price is not larger than 20 percent of the recent low")
 else:
-	print ('We should NOT buy this stock because its current closing price is lower than the closing average price over the last 15 days')
-
+    print("RECOMMENDATION: DONT BUY!")
+    print("RECOMMENDATION REASON: The latest closing price is larger than 20 percent of the recent low")
+print("----------------------------------")
+print(f"WRITING DATA TO CSV: {csv_file_path}...")
 print("-----------------")
 

@@ -1,5 +1,8 @@
+#Followed Walkthrough for all core code
+
 # from dotenv import load_dotenv
 import json
+import csv
 import os
 import requests
 
@@ -26,9 +29,12 @@ low_prices = []
 
 for date in dates:
     high_price = tsd[date]["2. high"]
+    low_price = tsd[date]["3. low"]
     high_prices.append(float(high_price))
+    low_prices.append(float(low_price))
 
-
+recent_high = max(high_prices)
+recent_low = min(low_prices)
 # print(type(response))
 # print(response.status_code)
 # print(response.text)
@@ -59,6 +65,25 @@ def to_usd(my_price):
 
 # TODO: write response data to a CSV file
 
+
+csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
+
+csv_headers = ["timestamp", "open", "high", "low", "close", "volume"]
+
+with open(csv_file_path, "w") as csv_file: 
+    writer = csv.DictWriter(csv_file, fieldnames=csv_headers)
+    writer.writeheader() 
+    for date in dates:
+        daily_prices = tsd[date]
+        writer.writerow({
+            "timestamp": date,
+            "open": daily_prices["1. open"],
+            "high": daily_prices["2. high"],
+            "low": daily_prices["3. low"],
+            "close": daily_prices["4. close"],
+            "volume": daily_prices["5. volume"]
+        })
+
 # TODO: further revise the example outputs below to reflect real information
 print("-----------------")
 # print(f"STOCK SYMBOL: {symbol}")
@@ -66,9 +91,15 @@ print("RUN AT: 11:52pm on June 5th, 2018")
 print("-----------------")
 print(f"LATEST DAY OF AVAILABLE DATA: {last_refreshed}")
 print(f"LATEST DAILY CLOSING PRICE: {to_usd(float(latest_close))} ")
-print(f"RECENT AVERAGE HIGH CLOSING PRICE: $101,000.00")
-print("RECENT AVERAGE LOW CLOSING PRICE: $99,000.00")
+print(f"RECENT AVERAGE HIGH CLOSING PRICE: ${recent_high}")
+print(f"RECENT AVERAGE LOW CLOSING PRICE: ${recent_low}")
+
+print("-------------------------")
+print(f"WRITING DATA TO CSV: {csv_file_path}")
+print("-------------------------")
+
 print("-----------------")
 print("RECOMMENDATION: Buy!")
 print("RECOMMENDATION REASON: Because the latest closing price is within threshold XYZ etc., etc. and this fits within your risk tolerance etc., etc.")
 print("-----------------")
+

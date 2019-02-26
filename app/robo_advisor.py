@@ -15,7 +15,7 @@ api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 
 
 while True:
-	symbol=input("Please type a valid stock symbol: ")
+	symbol=input("Please type a valid stock symbol:")
 	if not symbol.isalpha():
 		print("Please try again, entering a valid stock ticker of 3-4 letters")
 	else:

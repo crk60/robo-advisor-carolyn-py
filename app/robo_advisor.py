@@ -1,17 +1,15 @@
 #Followed Walkthrough for all core code
 
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import json
 import csv
 import os
 import requests
 
-# load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
+symbol = input("Please specify a stock symbol: ")
 
-symbol = "MSFT" #user input, like... input("Please specify a stock symbol: ")
-# see: https://www.alphavantage.co/support/#api-key
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
-#rint("API KEY: " + api_key) # TODO: remove or comment-out this line after you have verified the environment variable is getting read properly
+print("API KEY: " + api_key) # TODO: remove or comment-out this line after you have verified the environment variable is getting read properly
 
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
 
@@ -40,10 +38,22 @@ recent_low = min(low_prices)
 # print(response.status_code)
 # print(response.text)
 
+#heip's code was inspiration for the failing gracefully condition
+
+while True:
+	symbol=input("Please type a valid stock symbol: ")
+	if not symbol.isalpha():
+		print("Please type a valid stock symbol: ")
+	else:
+		data=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&apikey='+api_key)
+
+		if 'Error' in data.text:
+			print("There has been an error. Please type a different stock symbol: ")
+		else:
+			break
 
 
 
-input("Please type a valid stock symbol: ")
 # see: https://www.alphavantage.co/documentation/#daily (or a different endpoint, as desired)
 # TODO: assemble the request url to get daily data for the given stock symbol...
 
@@ -99,7 +109,10 @@ print(f"WRITING DATA TO CSV: {csv_file_path}")
 print("-------------------------")
 
 print("-----------------")
-print("RECOMMENDATION: Buy!")
-print("RECOMMENDATION REASON: Because the latest closing price is within threshold XYZ etc., etc. and this fits within your risk tolerance etc., etc.")
+if float(result.iloc[0]['close'])> result['close'][0:15].astype(float).mean():
+	print ('We should buy this stock because its current closing price is higher than the closing average price over the last 15 days')
+else:
+	print ('We should NOT buy this stock because its current closing price is lower than the closing average price over the last 15 days')
+
 print("-----------------")
 

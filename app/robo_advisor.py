@@ -9,12 +9,16 @@ import requests
 
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 
+
+#heip's code was inspiration for the failing gracefully condition
+
+
 while True:
 	symbol=input("Please type a valid stock symbol: ")
 	if not symbol.isalpha():
 		print("Please type a valid stock symbol: ")
 	else:
-		data=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&apikey='+api_key)
+		data=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+str(symbol)+'&apikey='+str(api_key))
 
 		if 'Error' in data.text:
 			print("There has been an error. Please type a different stock symbol: ")
@@ -51,20 +55,6 @@ recent_low = min(low_prices)
 # print(response.status_code)
 # print(response.text)
 
-#heip's code was inspiration for the failing gracefully condition
-
-
-
-# see: https://www.alphavantage.co/documentation/#daily (or a different endpoint, as desired)
-# TODO: assemble the request url to get daily data for the given stock symbol...
-
-# TODO: use the "requests" package to issue a "GET" request to the specified url, and store the JSON response in a variable...
-
-# TODO: further parse the JSON response...
-
-# TODO: traverse the nested response data structure to find the latest closing price and other values of interest...
-latest_price_usd = "$100,000.00"
-
 #from groceries exercise
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
@@ -76,6 +66,7 @@ def to_usd(my_price):
 
 # TODO: write response data to a CSV file
 
+#from stream
 
 csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
 
@@ -102,8 +93,8 @@ print("RUN AT: 11:52pm on June 5th, 2018")
 print("-----------------")
 print(f"LATEST DAY OF AVAILABLE DATA: {last_refreshed}")
 print(f"LATEST DAILY CLOSING PRICE: {to_usd(float(latest_close))} ")
-print(f"RECENT AVERAGE HIGH CLOSING PRICE: ${recent_high}")
-print(f"RECENT AVERAGE LOW CLOSING PRICE: ${recent_low}")
+print(f"RECENT AVERAGE HIGH CLOSING PRICE: {to_usd(float(recent_high))}")
+print(f"RECENT AVERAGE LOW CLOSING PRICE: {to_usd(float(recent_low))}")
 
 print("-------------------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}")
@@ -111,13 +102,13 @@ print("-------------------------")
 
 #Completed with help from Ashish Patel
 print("-----------------")
-threshold = 1.1*float(recent_low)
+threshold = 1.3*float(recent_low)
 if float(latest_close) < threshold:
     print("RECOMMENDATION: BUY!")
-    print("RECOMMENDATION REASON: The latest closing price is not larger than 20 percent of the recent low")
+    print("RECOMMENDATION REASON: The latest closing price is not larger than 30 percent of the recent low, indicating potential growth")
 else:
     print("RECOMMENDATION: DONT BUY!")
-    print("RECOMMENDATION REASON: The latest closing price is larger than 20 percent of the recent low")
+    print("RECOMMENDATION REASON: The latest closing price is larger than 30 percent of the recent low, indicating potential decline")
 print("----------------------------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}...")
 print("-----------------")

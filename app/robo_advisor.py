@@ -15,6 +15,12 @@ response = requests.get(request_url)
 parsed_response = json.loads(response.text)
 
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+
+tsd = parsed_response["Time Series (Daily)"]
+dates = list(tsd.keys())
+latest_day = dates[0]
+latest_close = tsd[latest_day]["4. close"]
+
 # print(type(response))
 # print(response.status_code)
 # print(response.text)
@@ -34,6 +40,11 @@ input("Please type a valid stock symbol: ")
 # TODO: traverse the nested response data structure to find the latest closing price and other values of interest...
 latest_price_usd = "$100,000.00"
 
+#from groceries exercise
+def to_usd(my_price):
+    return "${0:,.2f}".format(my_price)
+
+
 #
 # INFO OUTPUTS
 #
@@ -45,8 +56,8 @@ print("-----------------")
 # print(f"STOCK SYMBOL: {symbol}")
 print("RUN AT: 11:52pm on June 5th, 2018")
 print("-----------------")
-print("LATEST DAY OF AVAILABLE DATA: June 4th, 2018")
-print(f"LATEST DAILY CLOSING PRICE: {last_refreshed}")
+print("LATEST DAY OF AVAILABLE DATA: {last_refreshed}")
+print(f"LATEST DAILY CLOSING PRICE: {to_usd(float(latest_close))} ")
 print("RECENT AVERAGE HIGH CLOSING PRICE: $101,000.00")
 print("RECENT AVERAGE LOW CLOSING PRICE: $99,000.00")
 print("-----------------")

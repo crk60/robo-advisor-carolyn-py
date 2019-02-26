@@ -8,11 +8,12 @@ import requests
 
 # load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
 
+symbol = "MSFT" #user input, like... input("Please specify a stock symbol: ")
 # see: https://www.alphavantage.co/support/#api-key
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 #rint("API KEY: " + api_key) # TODO: remove or comment-out this line after you have verified the environment variable is getting read properly
 
-request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo"
+request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
 
 response = requests.get(request_url)
 parsed_response = json.loads(response.text)
@@ -42,7 +43,6 @@ recent_low = min(low_prices)
 
 
 
-# symbol = "NFLX" user input, like... input("Please specify a stock symbol: ")
 input("Please type a valid stock symbol: ")
 # see: https://www.alphavantage.co/documentation/#daily (or a different endpoint, as desired)
 # TODO: assemble the request url to get daily data for the given stock symbol...

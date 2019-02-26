@@ -17,7 +17,7 @@ api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 while True:
 	symbol=input("Please type a valid stock symbol: ")
 	if not symbol.isalpha():
-		print("Please try again, entering a valid stock ticker of 3-4 letters ")
+		print("Please try again, entering a valid stock ticker of 3-4 letters")
 	else:
 		data=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+str(symbol)+'&apikey='+str(api_key))
 

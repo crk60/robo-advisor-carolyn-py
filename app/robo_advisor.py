@@ -21,8 +21,13 @@ dates = list(tsd.keys())
 latest_day = dates[0]
 latest_close = tsd[latest_day]["4. close"]
 
-high_prices [10.20.30]
-recent_high = max(high_prices)
+high_prices = []
+low_prices = []
+
+for date in dates:
+    high_price = tsd[date]["2. high"]
+    high_prices.append(float(high_price))
+
 
 # print(type(response))
 # print(response.status_code)

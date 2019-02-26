@@ -21,6 +21,9 @@ dates = list(tsd.keys())
 latest_day = dates[0]
 latest_close = tsd[latest_day]["4. close"]
 
+high_prices [10.20.30]
+recent_high = max(high_prices)
+
 # print(type(response))
 # print(response.status_code)
 # print(response.text)
@@ -56,9 +59,9 @@ print("-----------------")
 # print(f"STOCK SYMBOL: {symbol}")
 print("RUN AT: 11:52pm on June 5th, 2018")
 print("-----------------")
-print("LATEST DAY OF AVAILABLE DATA: {last_refreshed}")
+print(f"LATEST DAY OF AVAILABLE DATA: {last_refreshed}")
 print(f"LATEST DAILY CLOSING PRICE: {to_usd(float(latest_close))} ")
-print("RECENT AVERAGE HIGH CLOSING PRICE: $101,000.00")
+print(f"RECENT AVERAGE HIGH CLOSING PRICE: $101,000.00")
 print("RECENT AVERAGE LOW CLOSING PRICE: $99,000.00")
 print("-----------------")
 print("RECOMMENDATION: Buy!")

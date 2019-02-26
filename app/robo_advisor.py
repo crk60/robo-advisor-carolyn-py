@@ -1,5 +1,6 @@
 #Followed Walkthrough for all core code
 #https://pypi.org/project/python-dotenv/
+#I had a lot of trouble getting dotenv to load, this was code from stack overflow and it seems to work
 from pathlib import Path  # python3 only
 env_path = Path('.') / '.env'
 import json
@@ -16,7 +17,7 @@ api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 while True:
 	symbol=input("Please type a valid stock symbol: ")
 	if not symbol.isalpha():
-		print("Please type a valid stock symbol: ")
+		print("Please try again, entering a valid stock ticker of 3-4 letters ")
 	else:
 		data=requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+str(symbol)+'&apikey='+str(api_key))
 
